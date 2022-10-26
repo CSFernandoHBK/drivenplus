@@ -1,23 +1,48 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components"
 import logo from "../../assets/images/logo.png"
+import {urlAPI} from "../../constants/URLs"
+import axios from "axios";
+import { AuthContext } from "../../context/auth";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const {infoUser ,setInfoUser} = useContext(AuthContext);
+    const navigate = useNavigate();
 
-    function sendLogin(){}
 
-    return(
+    function dataProcess(data){
+        setInfoUser(data);
+        if(data.membership === null){
+            navigate("/subscriptions");
+        } else {
+            navigate("/home")
+        }
+    }
+
+    function sendLogin(event) {
+        event.preventDefault();
+        const requisicao = axios.post(`${urlAPI}auth/login`, {
+            email: email,
+            password: password
+        })
+        requisicao.then((a) => dataProcess(a.data));
+        requisicao.catch((e) => console.log(e));
+    }
+
+    return (
         <Container>
-            <img src={logo}/>
+            <img src={logo} alt="logo driven+" />
             <Form onSubmit={sendLogin}>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email" required/>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="senha" required/>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email" required />
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="senha" required />
                 <button type="submit">ENTRAR</button>
             </Form>
-            <p>Não possui uma conta? Cadastre-se</p>
+            <Link to={"/sign-up"}>
+                <p>Não possui uma conta? Cadastre-se</p>
+            </Link>
         </Container>
     )
 }
