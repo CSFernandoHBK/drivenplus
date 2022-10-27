@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import logoPlano1 from "../../assets/images/logoPlano1.png"
 
 export default function HomePage() {
+
     return (
         <Container>
             <img src={logoPlano1} />

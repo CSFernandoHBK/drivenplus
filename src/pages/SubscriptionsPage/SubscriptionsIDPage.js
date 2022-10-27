@@ -1,36 +1,61 @@
 import styled from "styled-components";
 import logoPlano1 from "../../assets/images/logoPlano1.png"
 import { Icon } from '@iconify/react';
+import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { urlAPI } from "../../constants/URLs";
 
 export default function SubscriptionsIDPage() {
+    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
+    const [infoPlano, setInfoPlano] = useState();
+    const params = useParams();
 
-    function teste(){
-        return(alert("apertou"));
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${infoUser.token}`
+        }
+    };
+
+    useEffect(() => {
+        const requisicao = axios.get(`${urlAPI}subscriptions/memberships/${params.id}`, config);
+        requisicao.then((r) => setInfoPlano(r.data))
+        requisicao.catch((err) => console.log(err))
+    }, [])
+
+    if(infoPlano === undefined){
+        return(
+          <Container>
+            <h1>Carregando</h1>
+          </Container>  
+        )
     }
 
     return (
         <Container>
-            <BotaoVoltar onClick={() => teste()}>
-                <Icon icon="fa-solid:arrow-left" />
-            </BotaoVoltar>
+            <Link to={`/subscriptions`}>
+                <BotaoVoltar>
+                    <Icon icon="fa-solid:arrow-left" />
+                </BotaoVoltar>
+            </Link>
             <div>
-                <img src={logoPlano1} />
-                <h1>Driven Plus</h1>
+                <img src={infoPlano.image} />
+                <h1>{infoPlano.name}</h1>
             </div>
             <div>
                 <div>
                     <Icon icon="fluent:clipboard-task-list-rtl-20-regular" />
                     <h2>Benefícios:</h2>
                 </div>
-                <p>1. Brindes exclusivos</p>
-                <p>2. Materiais bônus de web</p>
+                {infoPlano.perks.map((i, index) =>
+                    <p>{index + 1}. {i.title}</p>)}
             </div>
             <div>
                 <div>
                     <Icon icon="fa-solid:money-bill-wave" />
                     <h2>Preco:</h2>
                 </div>
-                <p>R$ 39,99 cobrados mensalmente</p>
+                <p>R$ {infoPlano.price} cobrados mensalmente</p>
             </div>
             <Form>
                 <input placeholder="Nome impresso no cartão" />

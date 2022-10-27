@@ -9,12 +9,15 @@ import { AuthContext } from "../../context/auth";
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const {infoUser ,setInfoUser} = useContext(AuthContext);
+    // const {infoUser ,setInfoUser} = useContext(AuthContext);
+    const [infoUser, setInfoUser] = useState({});
     const navigate = useNavigate();
 
 
     function dataProcess(data){
-        setInfoUser(data);
+        const serial = JSON.stringify(data); 
+        localStorage.setItem("infoUser", serial);
+
         if(data.membership === null){
             navigate("/subscriptions");
         } else {

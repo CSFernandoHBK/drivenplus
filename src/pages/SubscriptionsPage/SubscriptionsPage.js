@@ -1,24 +1,36 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components"
-import logoPlano1 from "../../assets/images/logoPlano1.png"
-import logoPlano2 from "../../assets/images/logoPlano2.png"
-import logoPlano3 from "../../assets/images/logoPlano3.png"
+import { urlAPI } from "../../constants/URLs";
 
 export default function SubscriptionsPage() {
+    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
+    const [planos, setPlanos] = useState([]);
+
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${infoUser.token}`
+        }
+    };
+
+    useEffect(() => {
+        const requisicao = axios.get(`${urlAPI}subscriptions/memberships`, config);
+        requisicao.then((r) => setPlanos(r.data))
+        requisicao.catch((err) => console.log(err))
+    }, [])
+
     return(
         <Container>
             <h1>Escolha seu Plano</h1>
-            <div>
-                <img src={logoPlano1} alt="logo plano 1"/>
-                <h2>R$ 39,99</h2>
-            </div>
-            <div>
-                <img src={logoPlano2} alt="logo plano 2"/>
-                <h2>R$ 69,99</h2>
-            </div>
-            <div>
-                <img src={logoPlano3} alt="logo plano 3"/>
-                <h2>R$ 99,99</h2>
-            </div>
+            {planos.map((p) =>
+            <Link to={`/subscriptions/${p.id}`} key={p.id}>
+                <div>
+                    <img src={p.image} alt={`logo do plano ${p.id}`}/>
+                    <h2>R$ {p.price}</h2>
+                </div>
+            </Link> 
+            )}
         </Container>
     )
 }
