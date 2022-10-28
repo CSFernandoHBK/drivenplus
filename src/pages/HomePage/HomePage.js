@@ -1,20 +1,28 @@
 import styled from "styled-components";
 import { Icon } from '@iconify/react';
 import logoPlano1 from "../../assets/images/logoPlano1.png"
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
+    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
+    const {membership, name} = infoUser;
 
     return (
         <Container>
-            <img src={logoPlano1} />
+            <img src={membership.image} />
             <Icon icon="fa-solid:user-circle" />
             <div>
-                <p>Olá, fulano</p>
-                <Botao>Solicitar brindes</Botao>
-                <Botao>Materiais bônus de web</Botao>
+                <p>Olá, {name}</p>
+                {membership.perks.map((m, index) =>
+                <a href={m.link} key={m.id}>
+                    <Botao>{m.title}</Botao>
+                </a> 
+                )}
             </div>
             <div>
-                <BotaoMudarPlano>Mudar plano</BotaoMudarPlano>
+                <Link to={`/subscriptions`}>
+                    <BotaoMudarPlano>Mudar plano</BotaoMudarPlano>
+                </Link>
                 <BotaoCancelarPlano>Cancelar plano</BotaoCancelarPlano>
             </div>
         </Container>

@@ -45,6 +45,10 @@ const Container = styled.div`
     background-color: #0E0E13;
     padding: 0 43px 0;
 
+    a{
+        text-decoration: none;
+    }
+
     div{
         display: flex;
         justify-content: space-between;

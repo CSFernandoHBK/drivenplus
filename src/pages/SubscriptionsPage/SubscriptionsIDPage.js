@@ -5,10 +5,17 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { urlAPI } from "../../constants/URLs";
+import Confirmacao from "./Confirmacao";
 
 export default function SubscriptionsIDPage() {
     const infoUser = JSON.parse(localStorage.getItem("infoUser"));
     const [infoPlano, setInfoPlano] = useState();
+    const [nome, setNome] = useState();
+    const [digitos,setDigitos] = useState();
+    const [codigo, setCodigo] = useState();
+    const [validade, setValidade] = useState();
+    const [mostraModal, setMostraModal] = useState(false);
+
     const params = useParams();
 
     const config = {
@@ -23,14 +30,33 @@ export default function SubscriptionsIDPage() {
         requisicao.catch((err) => console.log(err))
     }, [])
 
-    if(infoPlano === undefined){
-        return(
-          <Container>
-            <h1>Carregando</h1>
-          </Container>  
-        )
+    function assinarPlano(event){
+        event.preventDefault();
+        const requisicao = axios.post(`${urlAPI}subscriptions`, {
+            membershipId: params.id,
+            cardName: nome,
+            cardNumber: digitos,
+            securityNumber: codigo,
+            expirationDate: validade
+        }, config)
+        requisicao.then((r) => console.log(r))
+        requisicao.catch((err) => console.log(err)) 
     }
 
+    if (infoPlano === undefined) {
+        return (
+            <Container>
+                <h1>Carregando</h1>
+            </Container>
+        )
+    }
+    
+    // (mostraModal
+    // ? 
+     
+    // :
+    
+    // )
     return (
         <Container>
             <Link to={`/subscriptions`}>
@@ -57,18 +83,17 @@ export default function SubscriptionsIDPage() {
                 </div>
                 <p>R$ {infoPlano.price} cobrados mensalmente</p>
             </div>
-            <Form>
-                <input placeholder="Nome impresso no cartão" />
-                <input placeholder="Digitos do cartão" />
+            <Form onSubmit={assinarPlano}>
+                <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Nome impresso no cartão" />
+                <input type="text" value={digitos} onChange={(e) => setDigitos(e.target.value)} placeholder="Digitos do cartão" />
                 <div>
-                    <input placeholder="Código de segurança" />
-                    <input placeholder="Validade" />
+                    <input type="number" value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="Código de segurança" />
+                    <input type="text" value={validade} onChange={(e) => setValidade(e.target.value)} placeholder="Validade" />
                 </div>
                 <button>ASSINAR</button>
             </Form>
         </Container>
     )
-
 }
 
 const Container = styled.div`
