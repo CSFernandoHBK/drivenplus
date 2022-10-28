@@ -18,6 +18,7 @@ export default function LoginPage() {
         const serial = JSON.stringify(data); 
         localStorage.setItem("infoUser", serial);
 
+
         if(data.membership === null){
             navigate("/subscriptions");
         } else {

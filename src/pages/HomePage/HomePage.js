@@ -1,11 +1,26 @@
 import styled from "styled-components";
 import { Icon } from '@iconify/react';
 import logoPlano1 from "../../assets/images/logoPlano1.png"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { urlAPI } from "../../constants/URLs";
 
 export default function HomePage() {
     const infoUser = JSON.parse(localStorage.getItem("infoUser"));
     const {membership, name} = infoUser;
+    const navigate = useNavigate();
+
+    function cancelarPlano(){
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${infoUser.token}`
+            }
+        };
+
+        const requisicao = axios.delete(`${urlAPI}subscriptions`, config)
+        requisicao.then(() => navigate("/subscriptions"))
+        requisicao.catch(() => alert("Ocorreu um erro! Por favor, recarregue a página e tente novamente"));
+    }
 
     return (
         <Container>
@@ -23,7 +38,7 @@ export default function HomePage() {
                 <Link to={`/subscriptions`}>
                     <BotaoMudarPlano>Mudar plano</BotaoMudarPlano>
                 </Link>
-                <BotaoCancelarPlano>Cancelar plano</BotaoCancelarPlano>
+                <BotaoCancelarPlano onClick={() => cancelarPlano()}>Cancelar plano</BotaoCancelarPlano>
             </div>
         </Container>
     )

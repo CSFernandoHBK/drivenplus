@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import logoPlano1 from "../../assets/images/logoPlano1.png"
 import { Icon } from '@iconify/react';
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -15,7 +14,6 @@ export default function SubscriptionsIDPage() {
     const [codigo, setCodigo] = useState();
     const [validade, setValidade] = useState();
     const [mostraModal, setMostraModal] = useState(false);
-
     const params = useParams();
 
     const config = {
@@ -50,14 +48,10 @@ export default function SubscriptionsIDPage() {
             </Container>
         )
     }
-    
-    // (mostraModal
-    // ? 
-     
-    // :
-    
-    // )
+
     return (
+        <>
+        {mostraModal && <Confirmacao/>}
         <Container>
             <Link to={`/subscriptions`}>
                 <BotaoVoltar>
@@ -65,7 +59,7 @@ export default function SubscriptionsIDPage() {
                 </BotaoVoltar>
             </Link>
             <div>
-                <img src={infoPlano.image} />
+                <img src={infoPlano.image} alt={`logo do plano ${infoPlano.name}`}/>
                 <h1>{infoPlano.name}</h1>
             </div>
             <div>
@@ -83,7 +77,7 @@ export default function SubscriptionsIDPage() {
                 </div>
                 <p>R$ {infoPlano.price} cobrados mensalmente</p>
             </div>
-            <Form onSubmit={assinarPlano}>
+            <Form onSubmit={(event) => {event.preventDefault();setMostraModal(true)}}>
                 <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Nome impresso no cartão" />
                 <input type="text" value={digitos} onChange={(e) => setDigitos(e.target.value)} placeholder="Digitos do cartão" />
                 <div>
@@ -93,6 +87,7 @@ export default function SubscriptionsIDPage() {
                 <button>ASSINAR</button>
             </Form>
         </Container>
+        </>
     )
 }
 
