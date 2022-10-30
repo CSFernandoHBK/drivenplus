@@ -1,19 +1,19 @@
 import styled from "styled-components";
 import { Icon } from '@iconify/react';
-import logoPlano1 from "../../assets/images/logoPlano1.png"
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { urlAPI } from "../../constants/URLs";
+import { useContext } from "react";
+import UserContext from "../../context/UserContext";
 
 export default function HomePage() {
-    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
-    const {membership, name} = infoUser;
+    const infoUserCT = useContext(UserContext);
     const navigate = useNavigate();
 
     function cancelarPlano(){
         const config = {
             headers: {
-                "Authorization": `Bearer ${infoUser.token}`
+                "Authorization": `Bearer ${infoUserCT.token}`
             }
         };
 
@@ -22,7 +22,15 @@ export default function HomePage() {
         requisicao.catch(() => alert("Ocorreu um erro! Por favor, recarregue a página e tente novamente"));
     }
 
-    return (
+    if(infoUserCT === undefined){
+        return(
+            <Container>
+                <p>Carregando</p>
+            </Container>
+        )
+    } else {
+        const {membership, name} = infoUserCT;
+        return (
         <Container>
             <img src={membership.image} />
             <Icon icon="fa-solid:user-circle" />
@@ -42,7 +50,7 @@ export default function HomePage() {
             </div>
         </Container>
     )
-
+    }
 }
 
 const Container = styled.div`

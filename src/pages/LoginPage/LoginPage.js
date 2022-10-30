@@ -1,25 +1,38 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components"
 import logo from "../../assets/images/logo.png"
-import {urlAPI} from "../../constants/URLs"
+import { urlAPI } from "../../constants/URLs"
 import axios from "axios";
-import { AuthContext } from "../../context/auth";
 
-export default function LoginPage() {
+export default function LoginPage(props) {
+    const {setEstadoInfoUser} = props;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // const {infoUser ,setInfoUser} = useContext(AuthContext);
-    const [infoUser, setInfoUser] = useState({});
     const navigate = useNavigate();
+    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
 
+    useEffect(() => {
+        if (JSON.parse(localStorage.getItem("infoUser")) !== null) {
+            verifyMembership(infoUser);
+        }
+    }, [])
 
-    function dataProcess(data){
-        const serial = JSON.stringify(data); 
+    function dataProcess(data) {
+        const serial = JSON.stringify(data);
         localStorage.setItem("infoUser", serial);
 
+        if (data.membership === null) {
+            navigate("/subscriptions");
+        } else {
+            navigate("/home")
+        }
+    }
 
-        if(data.membership === null){
+    function verifyMembership(data){
+        setEstadoInfoUser(data);
+
+        if (data.membership === null) {
             navigate("/subscriptions");
         } else {
             navigate("/home")
@@ -33,7 +46,7 @@ export default function LoginPage() {
             password: password
         })
         requisicao.then((a) => dataProcess(a.data));
-        requisicao.catch((e) => console.log(e));
+        requisicao.catch((e) => alert(e.response.data.message));
     }
 
     return (

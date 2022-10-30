@@ -10,7 +10,6 @@ export default function RegistrationPage() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const navigate = useNavigate();
-    console.log(urlAPI);
 
     function sendRegister(event) {
         event.preventDefault();
@@ -20,8 +19,8 @@ export default function RegistrationPage() {
             cpf: cpf,
             password: senha
         })
-        requisicao.then((a) => console.log(a));
-        requisicao.catch((e) => console.log(e));
+        requisicao.then((a) => navigate("/"));
+        requisicao.catch((e) => alert(e.response.data.message));
     }
 
     return (

@@ -1,15 +1,27 @@
 import { Icon } from '@iconify/react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { urlAPI } from '../../constants/URLs';
 
 export default function Confirmacao(props) {
+    const {setMostraModal, objetoInfoCadastro, nomePlano, precoPlano, config} = props;
+    const navigate = useNavigate();
+    
+    function assinarPlano(){
+        const requisicao = axios.post(`${urlAPI}subscriptions`, objetoInfoCadastro, config)
+        requisicao.then((r) => {console.log(r); navigate("/home")})
+        requisicao.catch((err) => console.log(err)) 
+    }
+
     return(
         <Container>
             <Icon icon="fa-solid:window-close"/>
             <div>
-                <p>Tem certeza que deseja assinar o plano Driven Plus (R$ 39,99)?</p>
+                <p>Tem certeza que deseja assinar o plano {nomePlano} (R$ {precoPlano})?</p>
                 <div>
-                    <BotaoNao>NAO</BotaoNao>
-                    <BotaoSim>SIM</BotaoSim>
+                    <BotaoNao onClick={() => setMostraModal(false)}>NAO</BotaoNao>
+                    <BotaoSim onClick={() => assinarPlano()}>SIM</BotaoSim>
                 </div>
             </div>
         </Container>

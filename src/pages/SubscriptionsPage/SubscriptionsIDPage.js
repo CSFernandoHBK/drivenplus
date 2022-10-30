@@ -15,6 +15,13 @@ export default function SubscriptionsIDPage() {
     const [validade, setValidade] = useState();
     const [mostraModal, setMostraModal] = useState(false);
     const params = useParams();
+    const objetoInfoCadastro = {
+        membershipId: params.id,
+        cardName: nome, 
+        cardNumber: digitos, 
+        securityNumber: codigo, 
+        expirationDate: validade
+    }
 
     const config = {
         headers: {
@@ -28,19 +35,6 @@ export default function SubscriptionsIDPage() {
         requisicao.catch((err) => console.log(err))
     }, [])
 
-    function assinarPlano(event){
-        event.preventDefault();
-        const requisicao = axios.post(`${urlAPI}subscriptions`, {
-            membershipId: params.id,
-            cardName: nome,
-            cardNumber: digitos,
-            securityNumber: codigo,
-            expirationDate: validade
-        }, config)
-        requisicao.then((r) => console.log(r))
-        requisicao.catch((err) => console.log(err)) 
-    }
-
     if (infoPlano === undefined) {
         return (
             <Container>
@@ -51,7 +45,13 @@ export default function SubscriptionsIDPage() {
 
     return (
         <>
-        {mostraModal && <Confirmacao/>}
+        {mostraModal && <Confirmacao 
+        setMostraModal={setMostraModal}
+        mostraModal={mostraModal}
+        objetoInfoCadastro={objetoInfoCadastro}
+        nomePlano={infoPlano.name}
+        precoPlano={infoPlano.price}
+        config={config}/>}
         <Container>
             <Link to={`/subscriptions`}>
                 <BotaoVoltar>
@@ -68,7 +68,7 @@ export default function SubscriptionsIDPage() {
                     <h2>Benefícios:</h2>
                 </div>
                 {infoPlano.perks.map((i, index) =>
-                    <p>{index + 1}. {i.title}</p>)}
+                    <p key={index}>{index + 1}. {i.title}</p>)}
             </div>
             <div>
                 <div>
