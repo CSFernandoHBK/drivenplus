@@ -6,6 +6,7 @@ import { urlAPI } from "../../constants/URLs";
 
 export default function HomePage() {
     const infoUser = JSON.parse(localStorage.getItem("infoUser"));
+    console.log(infoUser);
     const navigate = useNavigate();
 
     function cancelarPlano(){
@@ -16,8 +17,14 @@ export default function HomePage() {
         };
 
         const requisicao = axios.delete(`${urlAPI}subscriptions`, config)
-        requisicao.then(() => {alert("Plano cancelado!"); navigate("/subscriptions")})
+        requisicao.then((r) => updateState(r));
         requisicao.catch(() => alert("Ocorreu um erro! Por favor, recarregue a página e tente novamente"));
+    }
+
+    function updateState(r){
+        infoUser.membership = null;
+        localStorage.setItem("infoUser", JSON.stringify(infoUser));
+        navigate("/subscriptions");
     }
 
     if(infoUser === undefined){
