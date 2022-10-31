@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { urlAPI } from '../../constants/URLs';
 
 export default function Confirmacao(props) {
-    const {setMostraModal, objetoInfoCadastro, nomePlano, precoPlano, config} = props;
+    const {setMostraModal, objetoInfoCadastro, nomePlano, precoPlano, config, setDisabled} = props;
     const navigate = useNavigate();
 
     function assinarPlano(){
@@ -23,11 +23,11 @@ export default function Confirmacao(props) {
 
     return(
         <Container>
-            <Icon icon="fa-solid:window-close" onClick={() => navigate("/")}/>
+            <Icon icon="fa-solid:window-close" onClick={() => {setMostraModal(false);setDisabled(false)}}/>
             <div>
                 <p>Tem certeza que deseja assinar o plano {nomePlano} (R$ {precoPlano})?</p>
                 <div>
-                    <BotaoNao onClick={() => setMostraModal(false)}>NAO</BotaoNao>
+                    <BotaoNao onClick={() => {setMostraModal(false);setDisabled(false)}}>NAO</BotaoNao>
                     <BotaoSim onClick={() => assinarPlano()}>SIM</BotaoSim>
                 </div>
             </div>
@@ -70,6 +70,10 @@ const Container = styled.div`
 
     svg{
         font-size: 28px;
+        color: #FFFFFF;
+        position: absolute;
+        top: 26px;
+        right: 20px;
     }
 `
 

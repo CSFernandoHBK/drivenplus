@@ -6,17 +6,12 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import SubscriptionsIDPage from "./pages/SubscriptionsPage/SubscriptionsIDPage";
 import SubscriptionsPage from "./pages/SubscriptionsPage/SubscriptionsPage";
-import UpdateUserPage from "./pages/UpdateUserPage/UpdateUserPage";
+import UpdateUserPage from "./pages/UserPage/UpdateUserPage";
 import UserContext from "./context/UserContext"
-import { useEffect } from "react";
+import UserPage from "./pages/UserPage/UserPage";
 
 export default function App() {
   const [estadoInfoUser, setEstadoInfoUser] = useState();
-  
-  useEffect(() => {
-    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
-    console.log(infoUser);
-  }, [estadoInfoUser])
 
   return (
     <>
@@ -29,6 +24,7 @@ export default function App() {
             <Route path="/subscriptions" element={<SubscriptionsPage />} />
             <Route path="/subscriptions/:id" element={<SubscriptionsIDPage/>}/>
             <Route path="/home" element={<HomePage/>}/>
+            <Route path="/users/:id" element={<UserPage/>}/>
             <Route path="/users/:id/update" element={<UpdateUserPage/>}/>
           </Routes>
         </UserContext.Provider>

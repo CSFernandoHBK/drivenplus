@@ -10,6 +10,7 @@ export default function LoginPage(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [disabled, setDisabled] = useState(false);
 
     useEffect(() => {
         if (JSON.parse(localStorage.getItem("infoUser")) !== null &&
@@ -40,21 +41,32 @@ export default function LoginPage(props) {
 
     function sendLogin(event) {
         event.preventDefault();
+        setDisabled(true)
         const requisicao = axios.post(`${urlAPI}auth/login`, {
             email: email,
             password: password
         })
         requisicao.then((a) => dataProcess(a.data));
-        requisicao.catch((e) => alert(e.response.data.message));
+        requisicao.catch((e) => {alert(e.response.data.message);setDisabled(false)});
     }
 
     return (
         <Container>
             <img src={logo} alt="logo driven+" />
             <Form onSubmit={sendLogin}>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email" required />
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="senha" required />
-                <button type="submit">ENTRAR</button>
+                <input type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                placeholder="email" 
+                disabled={disabled} 
+                required />
+                <input type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                placeholder="senha" 
+                disabled={disabled} 
+                required />
+                <button type="submit" disabled={disabled}>ENTRAR</button>
             </Form>
             <Link to={"/sign-up"}>
                 <p>Não possui uma conta? Cadastre-se</p>

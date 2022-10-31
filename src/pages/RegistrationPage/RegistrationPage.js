@@ -10,27 +10,51 @@ export default function RegistrationPage() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const navigate = useNavigate();
+    const [disabled, setDisabled] = useState(false);
 
     function sendRegister(event) {
         event.preventDefault();
+        setDisabled(true);
         const requisicao = axios.post(`${urlAPI}auth/sign-up`, {
             email: email,
             name: nome,
             cpf: cpf,
             password: senha
         })
-        requisicao.then((a) => navigate("/"));
-        requisicao.catch((e) => alert(e.response.data.message));
+        requisicao.then(() => navigate("/"));
+        requisicao.catch((e) => {alert(e.response.data.message);setDisabled(false)});
     }
 
     return (
         <Container>
             <Form onSubmit={sendRegister}>
-                <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Nome" required />
-                <input type="number" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="CPF" required />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" required />
-                <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Senha" required />
-                <button type="submit">CADASTRAR</button>
+                <input type="text" 
+                value={nome} 
+                onChange={(e) => setNome(e.target.value)} 
+                placeholder="Nome" 
+                disabled={disabled} 
+                required />
+                <input type="number" 
+                value={cpf} 
+                onChange={(e) => setCpf(e.target.value)} 
+                placeholder="CPF" 
+                disabled={disabled} 
+                required />
+                <input type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                placeholder="E-mail" 
+                disabled={disabled} 
+                required />
+                <input type="password" 
+                value={senha} 
+                onChange={(e) => setSenha(e.target.value)} 
+                placeholder="Senha" 
+                disabled={disabled} 
+                required />
+                <button type="submit" 
+                disabled={disabled}
+                /*onClick={() => setDisabled(true)}*/>CADASTRAR</button>
             </Form>
             <Link to={"/"}>
                 <p>Já possuí uma conta? Entre</p>

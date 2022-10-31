@@ -3,8 +3,6 @@ import { Icon } from '@iconify/react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { urlAPI } from "../../constants/URLs";
-import { useContext } from "react";
-import UserContext from "../../context/UserContext";
 
 export default function HomePage() {
     const infoUser = JSON.parse(localStorage.getItem("infoUser"));
@@ -33,7 +31,7 @@ export default function HomePage() {
         return (
         <Container>
             <img src={membership.image} />
-            <Icon icon="fa-solid:user-circle"/>
+            <Icon icon="fa-solid:user-circle" onClick={() => navigate(`/users/${infoUser.id}`)}/>
             <div>
                 <p>Olá, {name}</p>
                 {membership.perks.map((m, index) =>

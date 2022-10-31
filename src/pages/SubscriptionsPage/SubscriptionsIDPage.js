@@ -22,6 +22,7 @@ export default function SubscriptionsIDPage() {
         securityNumber: codigo, 
         expirationDate: validade
     }
+    const [disabled, setDisabled] = useState(false);
 
     const config = {
         headers: {
@@ -51,7 +52,8 @@ export default function SubscriptionsIDPage() {
         objetoInfoCadastro={objetoInfoCadastro}
         nomePlano={infoPlano.name}
         precoPlano={infoPlano.price}
-        config={config}/>}
+        config={config}
+        setDisabled={setDisabled}/>}
         <Container>
             <Link to={`/subscriptions`}>
                 <BotaoVoltar>
@@ -77,14 +79,34 @@ export default function SubscriptionsIDPage() {
                 </div>
                 <p>R$ {infoPlano.price} cobrados mensalmente</p>
             </div>
-            <Form onSubmit={(event) => {event.preventDefault();setMostraModal(true)}}>
-                <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Nome impresso no cartão" />
-                <input type="text" value={digitos} onChange={(e) => setDigitos(e.target.value)} placeholder="Digitos do cartão" />
+            <Form onSubmit={(event) => {event.preventDefault();setMostraModal(true);setDisabled(true)}}>
+                <input type="text" 
+                value={nome} 
+                onChange={(e) => setNome(e.target.value)} 
+                placeholder="Nome impresso no cartão"
+                disabled={disabled}
+                required/>
+                <input type="text" 
+                value={digitos} 
+                onChange={(e) => setDigitos(e.target.value)} 
+                placeholder="Digitos do cartão"
+                disabled={disabled} 
+                required/>
                 <div>
-                    <input type="number" value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="Código de segurança" />
-                    <input type="text" value={validade} onChange={(e) => setValidade(e.target.value)} placeholder="Validade" />
+                    <input type="number" 
+                    value={codigo} 
+                    onChange={(e) => setCodigo(e.target.value)} 
+                    placeholder="Código de segurança" 
+                    disabled={disabled} 
+                    required/>
+                    <input type="text" 
+                    value={validade} 
+                    onChange={(e) => setValidade(e.target.value)} 
+                    placeholder="Validade" 
+                    disabled={disabled} 
+                    required/>
                 </div>
-                <button>ASSINAR</button>
+                <button disabled={disabled}>ASSINAR</button>
             </Form>
         </Container>
         </>
@@ -167,19 +189,32 @@ const Form = styled.form`
     width: 100vw;
     padding: 0 40px 0;
 
+    & > div{
+        display: flex;
+        width: 100%;
+        
+        & > input:nth-child(1){
+            margin-right: 2%;
+            width: 50%;
+        }
+        & > input:nth-child(2){
+            width: 50%;
+        }
+    }
+
     input{
         height: 52px;
         background: #FFFFFF;
         border-radius: 8px;
         margin-bottom: 8px;
-        /* padding-left: 14px; */
+        padding-left: 14px;
 
         ::placeholder{
             font-weight: 400;
             font-size: 14px;
             line-height: 16px;
             color: #7E7E7E;
-            padding-left: 14px;
+            /* padding-left: 14px; */
         }
     }
 
