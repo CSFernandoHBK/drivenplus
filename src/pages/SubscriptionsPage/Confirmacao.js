@@ -7,16 +7,23 @@ import { urlAPI } from '../../constants/URLs';
 export default function Confirmacao(props) {
     const {setMostraModal, objetoInfoCadastro, nomePlano, precoPlano, config} = props;
     const navigate = useNavigate();
-    
+
     function assinarPlano(){
         const requisicao = axios.post(`${urlAPI}subscriptions`, objetoInfoCadastro, config)
-        requisicao.then((r) => {console.log(r); navigate("/home")})
+        requisicao.then((r) => updateState(r))
         requisicao.catch((err) => console.log(err)) 
+    }
+
+    function updateState(r){
+        const infoUser = JSON.parse(localStorage.getItem("infoUser"));
+        infoUser.membership = r.data.membership;
+        localStorage.setItem("infoUser", JSON.stringify(infoUser));
+        navigate("/home");
     }
 
     return(
         <Container>
-            <Icon icon="fa-solid:window-close"/>
+            <Icon icon="fa-solid:window-close" onClick={() => navigate("/")}/>
             <div>
                 <p>Tem certeza que deseja assinar o plano {nomePlano} (R$ {precoPlano})?</p>
                 <div>

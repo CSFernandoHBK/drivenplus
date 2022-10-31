@@ -8,9 +8,15 @@ import SubscriptionsIDPage from "./pages/SubscriptionsPage/SubscriptionsIDPage";
 import SubscriptionsPage from "./pages/SubscriptionsPage/SubscriptionsPage";
 import UpdateUserPage from "./pages/UpdateUserPage/UpdateUserPage";
 import UserContext from "./context/UserContext"
+import { useEffect } from "react";
 
 export default function App() {
   const [estadoInfoUser, setEstadoInfoUser] = useState();
+  
+  useEffect(() => {
+    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
+    console.log(infoUser);
+  }, [estadoInfoUser])
 
   return (
     <>

@@ -7,33 +7,33 @@ import { useContext } from "react";
 import UserContext from "../../context/UserContext";
 
 export default function HomePage() {
-    const infoUserCT = useContext(UserContext);
+    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
     const navigate = useNavigate();
 
     function cancelarPlano(){
         const config = {
             headers: {
-                "Authorization": `Bearer ${infoUserCT.token}`
+                "Authorization": `Bearer ${infoUser.token}`
             }
         };
 
         const requisicao = axios.delete(`${urlAPI}subscriptions`, config)
-        requisicao.then(() => navigate("/subscriptions"))
+        requisicao.then(() => {alert("Plano cancelado!"); navigate("/subscriptions")})
         requisicao.catch(() => alert("Ocorreu um erro! Por favor, recarregue a página e tente novamente"));
     }
 
-    if(infoUserCT === undefined){
+    if(infoUser === undefined){
         return(
             <Container>
                 <p>Carregando</p>
             </Container>
         )
     } else {
-        const {membership, name} = infoUserCT;
+        const {membership, name} = infoUser;
         return (
         <Container>
             <img src={membership.image} />
-            <Icon icon="fa-solid:user-circle" />
+            <Icon icon="fa-solid:user-circle"/>
             <div>
                 <p>Olá, {name}</p>
                 {membership.perks.map((m, index) =>

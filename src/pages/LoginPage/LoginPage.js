@@ -10,17 +10,18 @@ export default function LoginPage(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const infoUser = JSON.parse(localStorage.getItem("infoUser"));
 
     useEffect(() => {
-        if (JSON.parse(localStorage.getItem("infoUser")) !== null) {
+        if (JSON.parse(localStorage.getItem("infoUser")) !== null &&
+        JSON.parse(localStorage.getItem("infoUser")) !== undefined) {
+            const infoUser = JSON.parse(localStorage.getItem("infoUser"));
             verifyMembership(infoUser);
         }
     }, [])
 
     function dataProcess(data) {
-        const serial = JSON.stringify(data);
-        localStorage.setItem("infoUser", serial);
+        setEstadoInfoUser(data);
+        localStorage.setItem("infoUser", JSON.stringify(data));
 
         if (data.membership === null) {
             navigate("/subscriptions");
@@ -30,8 +31,6 @@ export default function LoginPage(props) {
     }
 
     function verifyMembership(data){
-        setEstadoInfoUser(data);
-
         if (data.membership === null) {
             navigate("/subscriptions");
         } else {
