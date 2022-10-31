@@ -2,6 +2,8 @@ import styled from "styled-components"
 import { Icon } from "@iconify/react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+import { urlAPI } from "../../constants/URLs";
 
 export default function UpdateUserPage() {
     const params = useParams();
@@ -9,9 +11,35 @@ export default function UpdateUserPage() {
     const {name, cpf, email} = infoUser;
     const [novoNome, setNovoNome] = useState(name);
     const [novoEmail, setNovoEmail] = useState(email);
+    const [senhaAtual, setSenhaAtual] = useState();
+    const [novaSenha, setNovaSenha] = useState();
+    const navigate = useNavigate();
 
+    function alterarUsuario(event){
+        event.preventDefault()
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${infoUser.token}`
+            }
+        };
+        const requisicao = axios.put(`${urlAPI}users`,{
+            name: novoNome,
+            cpf: cpf,
+            email: novoEmail,
+            currentPassword: senhaAtual,
+            newPassword: novaSenha
+        }, config)
+        requisicao.then((r) => {updateState(r)})
+        requisicao.catch((err) => console.log(err))
+    }
 
-    function alterarUsuario(){}
+    function updateState(r){
+        infoUser.name = r.data.name;
+        infoUser.email = r.data.email;
+        infoUser.password = r.data.password;
+        localStorage.setItem("infoUser", JSON.stringify(infoUser));
+        navigate(`/users/${params.id}`);
+    }
 
     return(
         <Container>
@@ -20,7 +48,7 @@ export default function UpdateUserPage() {
                     <Icon icon="fa-solid:arrow-left" />
                 </BotaoVoltar>
             </Link>
-            <Form>
+            <Form onSubmit={alterarUsuario}>
                 <input type="text" 
                 placeholder={`${name}`}
                 value={novoNome} 
@@ -30,8 +58,16 @@ export default function UpdateUserPage() {
                 placeholder={`${email}`}
                 value={novoEmail} 
                 onChange={(e) => setNovoEmail(e.target.value)} />
-                <input type="password" placeholder="Senha atual" required/>
-                <input type="password" placeholder="Nova senha" required/>
+                <input type="password" 
+                placeholder="Senha atual" 
+                value={senhaAtual} 
+                onChange={(e) => setSenhaAtual(e.target.value)}
+                required/>
+                <input type="password" 
+                placeholder="Nova senha" 
+                value={novaSenha} 
+                onChange={(e) => setNovaSenha(e.target.value)}
+                />
                 <button>SALVAR</button>
             </Form>
         </Container>

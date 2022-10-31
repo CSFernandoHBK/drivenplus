@@ -75,7 +75,7 @@ export default function SubscriptionsIDPage() {
             <div>
                 <div>
                     <Icon icon="fa-solid:money-bill-wave" />
-                    <h2>Preco:</h2>
+                    <h2>Preço:</h2>
                 </div>
                 <p>R$ {infoPlano.price} cobrados mensalmente</p>
             </div>
